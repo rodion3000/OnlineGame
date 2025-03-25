@@ -5,57 +5,24 @@ using System.Collections;
 using System.Collections.Generic;
 using AppsFlyerSDK;
 
-public class AppManager : MonoBehaviour, IAppsFlyerConversionData
+public class AppManager : MonoBehaviour
 {
-    private const string endpoint = "https://your-endpoint-url.com"; // Замените на ваш эндпоинт
+    private const string endpoint = "https://sturdy-clutch-f43.notion.site/742144532ce0403988b0689e3f942982"; // Замените на ваш эндпоинт
     private const string webViewModeKey = "WebViewMode";
     private const string lastWebViewUrlKey = "LastWebViewUrl";
+    private const string appName = "Plinking Books"; 
 
     private void Start()
     {
         // Инициализация AppsFlyer
-        AppsFlyer.initSDK("YOUR_DEV_KEY", "YOUR_APP_ID");
+        AppsFlyer.initSDK("YOUR_DEV_KEY", "com.DefaultCompany.OnlineGame");
         AppsFlyer.startSDK();
 
-        // Проверка режима WebView
-        string mode = PlayerPrefs.GetString(webViewModeKey, "NoInternet");
-        if (mode == "WebView")
-        {
-            StartCoroutine(CheckWebView());
-        }
-        else if (mode == "Fallback")
-        {
-            LoadFallbackScene();
-        }
-        else
-        {
-            LoadNoInternetScene();
-        }
+        // Проверка интернет-соединения и загрузка WebView
+        StartCoroutine(CheckInternetAndLoadWebView());
     }
 
-    public void onConversionDataSuccess(string conversionData)
-    {
-        AppsFlyer.AFLog("onConversionDataSuccess", conversionData);
-        Dictionary<string, object> conversionDataDictionary = AppsFlyer.CallbackStringToDictionary(conversionData);
-        StartCoroutine(SendConversionData(conversionData));
-    }
-
-    public void onConversionDataFail(string error)
-    {
-        AppsFlyer.AFLog("onConversionDataFail", error);
-    }
-
-    public void onAppOpenAttribution(string attributionData)
-    {
-        AppsFlyer.AFLog("onAppOpenAttribution", attributionData);
-    }
-
-    public void onAppOpenAttributionFailure(string error)
-    {
-        AppsFlyer.AFLog("onAppOpenAttributionFailure", error);
-    }
-
-    private IEnumerator CheckWebView()
+    private IEnumerator CheckInternetAndLoadWebView()
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(endpoint))
         {
@@ -63,7 +30,7 @@ public class AppManager : MonoBehaviour, IAppsFlyerConversionData
 
             if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
             {
-                LoadFallbackScene();
+                LoadNoInternetScene();
             }
             else
             {
@@ -71,21 +38,17 @@ public class AppManager : MonoBehaviour, IAppsFlyerConversionData
                 string url = webRequest.downloadHandler.text; // Замените на правильный способ получения URL
                 PlayerPrefs.SetString(lastWebViewUrlKey, url);
                 PlayerPrefs.SetString(webViewModeKey, "WebView");
-                LoadWebViewScene(url);
+                
+
+                // Загрузка сцены WebView
+                LoadWebViewScene();
             }
         }
     }
-
-    private void LoadWebViewScene(string url)
+    
+    private void LoadWebViewScene()
     {
-        // Здесь вы можете передать URL в WebView
         SceneManager.LoadScene("WebViewScene");
-    }
-
-    private void LoadFallbackScene()
-    {
-        PlayerPrefs.SetString(webViewModeKey, "Fallback");
-        SceneManager.LoadScene("FallbackScene");
     }
 
     private void LoadNoInternetScene()
@@ -93,25 +56,5 @@ public class AppManager : MonoBehaviour, IAppsFlyerConversionData
         SceneManager.LoadScene("NoInternetScene");
     }
 
-    private IEnumerator SendConversionData(string conversionData)
-    {
-        string jsonData = JsonUtility.ToJson(new { conversionData = conversionData });
-
-        using (UnityWebRequest webRequest = UnityWebRequest.PostWwwForm(endpoint, jsonData))
-        {
-            webRequest.method = UnityWebRequest.kHttpVerbPOST;
-            webRequest.SetRequestHeader("Content-Type", "application/json");
-
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.LogError("Error sending conversion data: " + webRequest.error);
-            }
-            else
-            {
-                Debug.Log("Conversion data sent successfully: " + webRequest.downloadHandler.text);
-            }
-        }
-    }
+    
 }
