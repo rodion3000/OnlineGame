@@ -9,6 +9,9 @@ using AppsFlyerSDK;
 public class WebViewManager : MonoBehaviour, IAppsFlyerConversionData
 {
     private string endpoint = "https://sturdy-clutch-f43.notion.site/742144532ce0403988b0689e3f942982"; // Укажите ваш endpoint
+    private string url;
+    private const string LastShownTimeKey = "LastShownBonusScreenTime";
+    [SerializeField] private GameObject bonusScreenCanvas;
 
     private void Start()
     {
@@ -22,15 +25,43 @@ public class WebViewManager : MonoBehaviour, IAppsFlyerConversionData
         // Подписка на события получения сообщений
         FirebaseMessaging.MessageReceived += OnMessageReceived;
         
-        RequestNotificationPermission();
-        
         // Получаем URL из PlayerPrefs
         string url = PlayerPrefs.GetString("LastWebViewUrl", "https://default-url.com");
 
         // Обработка данных конверсии
         onConversionDataSuccess(url);
 
-        // Открываем URL в браузере
+        CheckBonusScreen();
+    }
+    
+    private void CheckBonusScreen()
+    {
+        // Проверяем, прошло ли 3 дня с последнего показа
+        float lastShownTime = PlayerPrefs.GetFloat(LastShownTimeKey, 0);
+        if (Time.time - lastShownTime >= 259200) // 3 дня в секундах
+        {
+            ShowBonusScreen();
+        }
+        else
+        {
+            OpenUrlInBrowser(url);
+        }
+    }
+    private void ShowBonusScreen()
+    {
+        bonusScreenCanvas.SetActive(true);
+    }
+
+    public void OnYesButtonClicked()
+    {
+        RequestNotificationPermission();
+        PlayerPrefs.SetFloat(LastShownTimeKey, Time.time); // Обновляем время последнего показа
+        OpenUrlInBrowser(url);
+    }
+
+    public void OnSkipButtonClicked()
+    {
+        PlayerPrefs.SetFloat(LastShownTimeKey, Time.time); // Обновляем время последнего показа
         OpenUrlInBrowser(url);
     }
     

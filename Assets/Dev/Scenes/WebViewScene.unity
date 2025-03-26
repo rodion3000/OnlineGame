@@ -338,7 +338,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 71278298}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1739740012}
+        m_TargetAssemblyTypeName: WebViewManager, Assembly-CSharp
+        m_MethodName: OnSkipButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &71278298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -987,7 +999,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1186101298}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1739740012}
+        m_TargetAssemblyTypeName: WebViewManager, Assembly-CSharp
+        m_MethodName: OnYesButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1186101298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1264,6 +1288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 798001b553e91d340bc9189d8e50094c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bonusScreenCanvas: {fileID: 676697522}
 --- !u!4 &1739740013
 Transform:
   m_ObjectHideFlags: 0
