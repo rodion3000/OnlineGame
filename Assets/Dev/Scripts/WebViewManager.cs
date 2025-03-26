@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using Firebase;
+using Firebase.Messaging;
 using System.Collections;
 using System.Collections.Generic;
 using AppsFlyerSDK;
@@ -10,6 +12,17 @@ public class WebViewManager : MonoBehaviour, IAppsFlyerConversionData
 
     private void Start()
     {
+        // Инициализация Firebase
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        {
+            FirebaseApp app = FirebaseApp.DefaultInstance;
+            Debug.Log("Firebase is ready.");
+        });
+        
+        // Подписка на события получения сообщений
+        FirebaseMessaging.MessageReceived += OnMessageReceived;
+        
+        RequestNotificationPermission();
         
         // Получаем URL из PlayerPrefs
         string url = PlayerPrefs.GetString("LastWebViewUrl", "https://default-url.com");
@@ -20,7 +33,23 @@ public class WebViewManager : MonoBehaviour, IAppsFlyerConversionData
         // Открываем URL в браузере
         OpenUrlInBrowser(url);
     }
+    
 
+    private void RequestNotificationPermission()
+    {
+        FirebaseMessaging.RequestPermissionAsync().ContinueWith(task =>
+        {
+            if (task.IsCompleted && !task.IsFaulted)
+            {
+                Debug.Log("Notification permission granted.");
+                // Здесь вы можете подписаться на уведомления или выполнить другие действия
+            }
+            else
+            {
+                Debug.LogError("Notification permission denied.");
+            }
+        });
+    }
     public void onConversionDataSuccess(string conversionData)
     {
         AppsFlyer.AFLog("onConversionDataSuccess", conversionData);
@@ -28,6 +57,12 @@ public class WebViewManager : MonoBehaviour, IAppsFlyerConversionData
 
         // Отправляем данные конверсии на сервер
         StartCoroutine(SendConversionData(conversionData));
+    }
+    
+    private void OnMessageReceived(object sender, MessageReceivedEventArgs e)
+    {
+        Debug.Log("Received a new message: " + e.Message.From);
+        // Обработка уведомления
     }
     
     public void onAppOpenAttribution(string attributionData)
