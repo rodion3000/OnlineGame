@@ -70,3 +70,7 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Игнорировать файлы FirebaseCppApp
+FirebaseCppApp-12_7_0.bundle
+FirebaseCppApp-12_7_0.so
