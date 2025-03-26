@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "256017783060",
+    "project_id": "plinking-books",
+    "storage_bucket": "plinking-books.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256017783060:android:d3fb9c6851319d935bca01",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.OnlineGame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm7BhoiFKsUQxhPaxtyOENl5BGClLIzJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
