@@ -38,14 +38,14 @@ public class WebViewManager : MonoBehaviour, IAppsFlyerConversionData
     {
         // Проверяем, прошло ли 3 дня с последнего показа
         float lastShownTime = PlayerPrefs.GetFloat(LastShownTimeKey, 0);
-        if (Time.time - lastShownTime >= 259200) // 3 дня в секундах
-        {
+       // if (Time.time - lastShownTime >= 259200) // 3 дня в секундах
+       // {
             ShowBonusScreen();
-        }
-        else
-        {
-            OpenUrlInBrowser(url);
-        }
+      //  }
+      //  else
+     //   {
+      //      OpenUrlInBrowser(url);
+        //}
     }
     private void ShowBonusScreen()
     {
